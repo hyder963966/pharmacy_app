@@ -1,8 +1,11 @@
 pluginManagement {
-    // الحصول على مسار Flutter SDK الذي يمرره أمر "flutter build" تلقائياً
-    val flutterSdkPath = System.getProperty("flutter.sdk") ?: error("flutter.sdk system property not set. Make sure you run via 'flutter build'.")
+    // 1. نجرب أولا system property اللي بيمرره أمر flutter build
+    // 2. إذا مش موجود، نجرب متغير البيئة FLUTTER_ROOT اللي بتستعمله منصات زي FlutLab
+    // 3. كملاذ أخير، نوقف البناء ونعطي رسالة خطأ واضحة
+    val flutterSdkPath = System.getProperty("flutter.sdk")
+        ?: System.getenv("FLUTTER_ROOT")
+        ?: error("flutter.sdk not set. Make sure you run via 'flutter build' or set FLUTTER_ROOT environment variable.")
 
-    // هذا السطر هو المفتاح: يخبر Gradle بمكان إضافة Flutter
     includeBuild("$flutterSdkPath/packages/flutter_tools/gradle")
 
     repositories {
